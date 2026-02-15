@@ -10,7 +10,7 @@ from ..utils.auth import generate_access_token
 router = APIRouter()
 unauthed_router = APIRouter()
 
-VALID_TEAM_CATEGORIES = ["obj_team", "tba_team", "predicted_team", "pickability", "predicted_alliances", "obj_pit", "subj_team", "picklist", "ss_team"] # Define the valid team categories
+VALID_TEAM_CATEGORIES = ["obj_team", "tba_team", "predicted_team", "pickability", "predicted_alliances", "obj_pit", "subj_team", "picklist", "ss_team", "tags"] # Define the valid team categories
 VALID_TIM_CATEGORIES = ["obj_tim", "tba_tim", "subj_tim", "ss_tim"] # Define the valid tim categories
  
 # Endpoint to test whether a given database exists and is working in the cluster
