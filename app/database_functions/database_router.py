@@ -11,7 +11,7 @@ from datetime import datetime
 router = APIRouter()
 unauthed_router = APIRouter()
 
-VALID_TEAM_CATEGORIES = ["obj_team", "tba_team", "predicted_team", "pickability", "predicted_alliances", "obj_pit", "subj_team", "picklist", "ss_team", "tags"] # Define the valid team categories
+VALID_TEAM_CATEGORIES = ["obj_team", "tba_team", "predicted_team", "pickability", "predicted_alliances", "obj_pit", "subj_team", "picklist", "ss_team"] # Define the valid team categories
 VALID_TIM_CATEGORIES = ["obj_tim", "tba_tim", "subj_tim", "ss_tim"] # Define the valid tim categories
  
 # Endpoint to test whether a given database exists and is working in the cluster
@@ -88,6 +88,18 @@ async def get_obj_tim(event_key: str, category: str):
 
     return obj_tim
 
+@router.get("/tags/{event_key}")
+async def get_tags(event_key: str):
+    db = Database.get_database(event_key)
+    # Get all tags documents
+    data = await db["tags"].find({}, {"_id": 0}).to_list(length=None)
+
+    tags = {}
+    for document in data:
+        # Viewer wants it like {"1678": {"tagname": stuff}}
+        tags[document["team_number"]] = document["tags"]
+    return tags
+
 @router.get("/predicted_aim/{event_key}")
 async def get_predicted_aim(event_key: str):
     db = Database.get_database(event_key)
@@ -122,6 +134,7 @@ async def get_auto_paths(event_key: str):
 @router.get("/ss_users/{event_key}")
 async def get_ss_users(event_key: str):
     db = Database.get_database(event_key)
+    # Get all ss_tim and ss_team documents
     tim = await db["ss_tim"].find({}, {"_id": 0}).to_list(length=None)
     team = await db["ss_team"].find({}, {"_id": 0}).to_list(length=None)
     data = tim + team
