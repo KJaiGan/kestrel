@@ -344,6 +344,17 @@ async def create_drive_practice_data(data: dict):
     
     return {"status": "ok", "id": str(result.inserted_id)}  # ← fix
 
+@unauthed_router.get("/drive_practice/all")
+async def get_drive_practice_data():
+    
+    db = Database.get_database("kestrel")
+    records = await db["drive_practice"].find().to_list(length=None)
+    
+    for record in records:
+        record["_id"] = str(record["_id"])  # convert ObjectId to string
+    
+    return records
+
 @unauthed_router.post("/user/login/{username}/{password}")
 async def login(username: str, password: str):
     db = Database.get_database("kestrel")
