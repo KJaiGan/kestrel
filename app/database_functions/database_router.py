@@ -338,11 +338,11 @@ async def get_pit_image_list(event_key: str):
 
 @unauthed_router.post("/drive_practice/new")
 async def create_drive_practice_data(data: dict):
+    
     db = Database.get_database("kestrel")
-
     result = await db["drive_practice"].insert_one({"Time": datetime.now(), "data": data})
-
-    return result
+    
+    return {"status": "ok", "id": str(result.inserted_id)}  # ← fix
 
 @unauthed_router.post("/user/login/{username}/{password}")
 async def login(username: str, password: str):
